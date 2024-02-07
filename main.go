@@ -32,6 +32,7 @@ func get_remote(remote string) string {
 	cmd := exec.Command("git", "remote", "get-url", remote)
 	output, err := cmd.Output()
 	check(err)
+	output = output[:len(output)-1]
 	return string(output)
 }
 
@@ -39,12 +40,14 @@ func get_remote(remote string) string {
 // rm -rf ./dirformynewrepo/.git
 
 func clone_repo(url string, file_name string) {
-	cmd := exec.Command("git", "clone", "--depth=1", "--branch=master", url, file_name)
-	output, err := cmd.Output()
+	cmd := exec.Command("git", "clone", "--depth=1", "--branch=main", url, "./releases/"+file_name)
+	fmt.Println("git clone --depth=1 --branch=main " + url + " " + "./releases/" + file_name)
+	output, err := cmd.CombinedOutput()
+	fmt.Println(string(output))
 	check(err)
-	fmt.Println("clone_repo() | " + string(output))
-	cmd = exec.Command("rm", "-rf", file_name+".git")
-	output, err = cmd.Output()
+	cmd = exec.Command("rm", "-rf", "./releases/"+file_name+"/.git")
+	fmt.Println("rm -rf " + "./releases/" + file_name + "/.git ")
+	output, err = cmd.CombinedOutput()
+	fmt.Println(string(output))
 	check(err)
-	fmt.Println("clone_repo() | " + string(output))
 }
